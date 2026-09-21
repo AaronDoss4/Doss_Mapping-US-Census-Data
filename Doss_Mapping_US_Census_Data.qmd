@@ -1,0 +1,49 @@
+---
+title: "Median Household Income in Virginia Counties"
+format:
+  html:
+    embed-resources: true
+---
+
+## Quarto
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(tidyverse)
+library(sf)
+
+va_income <- readRDS("va_income.rds")
+
+top_10_income <- va_income %>%
+  select(NAME,estimate) %>%
+  arrange(desc(estimate))
+```
+
+```{r}
+#| echo: false
+ggplot(top_10_income[1:10,], aes(x = reorder(NAME, estimate), y = estimate)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Highest Median Household Incomes in Virginia",
+    x = NULL,
+    y = "Median Household Income ($)"
+  )
+```
+
+```{r}
+#| echo: false
+ggplot(va_income) +
+  geom_sf(aes(fill = estimate)) +
+  labs(
+    title = "Median Household Income Across Virginia Counties",
+    fill = "Median Household Income ($)"
+  ) +
+  theme_void()
+```
+
+The first figure is a bar chart that displays the 10 highest counties in Virginia based on their median household income. The x-axis is the names for the counties, and the y-axis is median household income, but the graph is flipped because the names of the countries are long. Based on this visual, we can see that the top 10 have similar median household incomes, except for Loudoun County, which is much higher than the rest.\
+\
+The next figure shows the distribution of median household income for each county throughout the state of Virginia. Based on this visual, we can see that counties in northern Virginia tend to have a higher median household income. This is apparent because the southern counties tend to have a darker shade of blue, while the northern counties are lighter. Additionally, we can also easily identify Loudoun County in this visual because it has an extremely light shade of blue due to having a high median household income.
